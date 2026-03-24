@@ -6,17 +6,18 @@
   <title>Lead Recovery</title>
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest" deferred></script>
   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content="Lead Recovery" />
   <!-- <link rel="manifest" href="/site.webmanifest" /> -->
+   <meta name="description" content="An AI powered Customer Contact Center to recover sales lead" />
 </head>
 <!-- Toggle Themes: theme-dark | theme-light -->
 <!-- Toggle Layouts: variant-1-1 | variant-1-2 -->
-<body class="theme-dark variant-1-1 sidebar-collapsed details-pane-collapsed">
+<body class="theme-dark variant-1-1 sidebar-collapsed details-pane-collapsed call-logs-collapsed">
 
   <div id="modal-container"></div>
 
@@ -60,16 +61,18 @@
     </div>
   </nav>
 
-  <aside class="sidebar"> <!-- Pane 1 -->
-    <div class="view-header"></div>
-    <div class="accordion-container"></div>
+  <aside class="sidebar">
+    <div class="sidebar-content-wrapper">
+      <div class="view-header"></div>
+      <div class="accordion-container"></div>
+    </div>
   </aside>
 
   <main class="main-view"> <!-- Pane 2 -->
     <div class="tabs"></div>
     <div class="content main-view-content"></div>
   </main>
-
+  
   <aside class="details-pane"> <!-- Pane 3 -->
      <div class="view-header">OUTLINE</div>
      <div class="content">...</div>
@@ -77,9 +80,7 @@
 
   <section class="call-logs">
     <div class="tabs">
-      <div class="tab active">TERMINAL</div>
-      <div class="tab">OUTPUT</div>
-      <div class="tab">PROBLEMS</div>
+      <div class="tab active">Call Logs</div>
     </div>
     <div class="content log-content">
       <code>> Call logs</code>
@@ -89,6 +90,8 @@
   <footer class="status-bar">
     <div class="status-left">main*</div>
     <div class="status-right">
+      <i data-lucide="sun-moon" data-action="toggle-theme" style="cursor: pointer;" width="20" height="20"></i>
+      <i data-lucide="panel-bottom-open" data-action="toggle-call-logs" style="cursor: pointer;" width="20" height="20"></i>
     </div>
   </footer>
 
@@ -122,6 +125,7 @@
     const mainViewTabs = document.querySelector('.main-view .tabs');
     const viewActions = document.querySelector('.view-actions');
     const titleBar = document.querySelector('.title-bar');
+    const statusBar = document.querySelector('.status-bar');
 
     // --- MANAGERS ---
     const tabManager = new TabManager(mainViewTabs);
@@ -449,6 +453,31 @@
       }
     });
 
+    // --- Call Logs Tabs ---
+    const callLogsTabsContainer = document.querySelector('.call-logs .tabs');
+    const callLogsContent = document.querySelector('.call-logs .log-content');
+    const callLogsTabManager = new TabManager(callLogsTabsContainer);
+
+    // Initial tabs for call logs
+    callLogsTabManager.openTabs = [
+        { id: 'call_log', title: 'Call Logs', active: true }
+    ];
+    callLogsTabManager.render();
+
+
+    // Event listener for call logs tabs
+    callLogsTabsContainer.addEventListener('click', (event) => {
+        const tab = event.target.closest('.tab');
+        if (!tab) return;
+        const tabId = tab.dataset.id;
+
+        callLogsTabManager.setActiveTab(tabId);
+        callLogsTabManager.render();
+
+        // Update content based on tab
+        callLogsContent.innerHTML = `<code>> ${tab.textContent} content</code>`;
+    });
+
     // --- EVENT LISTENERS ---
     activityBar.addEventListener('click', onActivityBarClick);
     sidebar.addEventListener('click', (event) => {
@@ -458,6 +487,27 @@
     viewActions.addEventListener('click', onViewActionsClick);
     titleBar.addEventListener('click', onTitleBarClick);
     mainViewTabs.addEventListener('click', onTabsClick);
+    statusBar.addEventListener('click', (event) => {
+        const actionTarget = event.target.closest('[data-action]');
+        if (!actionTarget) return;
+
+        const action = actionTarget.dataset.action;
+
+        switch(action) {
+            case 'toggle-call-logs':
+                document.body.classList.toggle('call-logs-collapsed');
+                break;
+            case 'toggle-theme':
+                if (document.body.classList.contains('theme-dark')) {
+                    document.body.classList.remove('theme-dark');
+                    document.body.classList.add('theme-light');
+                } else {
+                    document.body.classList.remove('theme-light');
+                    document.body.classList.add('theme-dark');
+                }
+                break;
+        }
+    });
 
     // --- INITIAL STATE ---
     // Load the initial view for the default active icon
