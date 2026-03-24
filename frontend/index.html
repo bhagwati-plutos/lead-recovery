@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Recovery</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<!-- Toggle Themes: theme-dark | theme-light -->
+<!-- Toggle Layouts: variant-1-1 | variant-1-2 -->
+<body class="theme-dark variant-1-1 sidebar-collapsed details-pane-collapsed">
+
+  <div id="modal-container"></div>
+
+  <header class="title-bar">
+    <div class="view-context-menu">
+      <org-selector></org-selector>
+      <div class="view-actions">
+        <span>File</span>
+        <span>Edit</span>
+        <span>Selection</span>
+        <span>View</span>
+        <span>Go</span>
+        <span>Run</span>
+        <span>Terminal</span>
+        <span>Help</span>
+      </div>
+    </div>
+    <div class="title">Lead Recovery</div>
+    <div class="view-context-menu">
+      <i data-lucide="panel-left-close" data-action="toggle-sidebar" class="title-bar-icon" width="20" height="20"></i>
+      <i data-lucide="panel-right-close" data-action="toggle-details-pane" class="title-bar-icon" width="20" height="20"></i>
+      <i data-lucide="sliders-horizontal" data-action="open-settings" class="title-bar-icon" width="20" height="20"></i>
+      <i data-lucide="message-square" class="title-bar-icon" width="20" height="20"></i>
+      <i data-lucide="bell" class="title-bar-icon" width="20" height="20"></i>
+    </div>
+  </header>
+
+  <nav class="activity-bar">
+    <div class="activity-bar-top">
+      <div class="icon active" data-title="Dashboard"><i data-lucide="gauge"></i></div>
+      <div class="icon" data-title="Work Floor"><i data-lucide="briefcase-business"></i></div>
+      <div class="icon" data-title="Workspace"><i data-lucide="headset"></i></div>
+      <div class="icon" data-title="CRM"><i data-lucide="users"></i></div>
+      <div class="icon" data-title="Analytics"><i data-lucide="chart-no-axes-combined"></i></div>
+      <div class="icon" data-title="Labs"><i data-lucide="flask-conical"></i></div>
+    </div>
+    <div class="activity-bar-bottom">
+      <div class="icon" data-title="Integrations"><i data-lucide="blocks"></i></div>
+      <div class="icon" data-title="Settings"><i data-lucide="settings"></i></div>
+      <div class="icon" data-title="Profile"><i data-lucide="circle-user"></i></div>
+    </div>
+  </nav>
+
+  <aside class="sidebar"> <!-- Pane 1 -->
+    <div class="view-header"></div>
+    <div class="accordion-container"></div>
+  </aside>
+
+  <main class="main-view"> <!-- Pane 2 -->
+    <div class="tabs"></div>
+    <div class="content main-view-content"></div>
+  </main>
+
+  <aside class="details-pane"> <!-- Pane 3 -->
+     <div class="view-header">OUTLINE</div>
+     <div class="content">...</div>
+  </aside>
+
+  <section class="call-logs">
+    <div class="tabs">
+      <div class="tab active">TERMINAL</div>
+      <div class="tab">OUTPUT</div>
+      <div class="tab">PROBLEMS</div>
+    </div>
+    <div class="content log-content">
+      <code>> Call logs</code>
+    </div>
+  </section>
+
+  <footer class="status-bar">
+    <div class="status-left">main*</div>
+    <div class="status-right">
+    </div>
+  </footer>
+
+  <script type="module">
+    // --- IMPORTS ---
+    import './components/org-selector/org-selector.js';
+    import { load } from './js/lib/components/loader.js';
+    import { TabManager } from './js/lib/tabManager.js';
+    // Import placeholder components for routing
+    import './components/work-floor-overview/work-floor-overview.js';
+    import './components/work-floor-active-calls/work-floor-active-calls.js';
+    import './components/work-floor-agent-training/work-floor-agent-training.js';
+    import './components/work-floor-workforce-management/work-floor-workforce-management.js';
+    import './components/dashboard-home/dashboard-home.js';
+    import './components/workspace-dashboard/workspace-dashboard.js';
+    import './components/workspace-inbox/workspace-inbox.js';
+    import './components/workspace-communication/workspace-communication.js';
+    import './components/crm-dashboard/crm-dashboard.js';
+    import './components/crm-leads/crm-leads.js';
+    import './components/workspace-phone/workspace-phone.js';
+    import './components/integrations-telephony/integrations-telephony.js';
+
+    // --- INITIALIZATION ---
+    lucide.createIcons();
+
+    // --- DOM REFERENCES ---
+    const modalContainer = document.querySelector('#modal-container');
+    const activityBar = document.querySelector('.activity-bar');
+    const sidebar = document.querySelector('.sidebar');
+    const mainViewContent = document.querySelector('.main-view-content');
+    const mainViewTabs = document.querySelector('.main-view .tabs');
+    const viewActions = document.querySelector('.view-actions');
+    const titleBar = document.querySelector('.title-bar');
+
+    // --- MANAGERS ---
+    const tabManager = new TabManager(mainViewTabs);
+
+    // --- DATA ---
+    const menuData = {
+      'Dashboard': {
+        sidebar: [
+            {
+                group: 'General',
+                items: [
+                    { name: 'Home', component: 'dashboard-home', icon: 'home' }
+                ]
+            }
+        ],
+        viewActions: [
+           { name: 'File', action: 'file' },
+           { name: 'Edit', action: 'edit' },
+           { name: 'View', action: 'view' }
+        ]
+      },
+      'Work Floor': {
+        sidebar: [
+          {
+            group: 'MONITORING',
+            items: [
+              { name: 'Overview', component: 'work-floor-overview', icon: 'eye' },
+              { name: 'Active Calls', component: 'work-floor-active-calls', icon: 'phone' }
+            ]
+          },
+          {
+            group: 'QUALITY ASSURANCE',
+            items: [
+              { name: 'Agent Training', component: 'work-floor-agent-training', icon: 'compass' }
+            ]
+          },
+          {
+            group: 'PLANNING',
+            items: [
+              { name: 'Workforce Management', component: 'work-floor-workforce-management', icon: 'users' }
+            ]
+          }
+        ],
+        viewActions: [
+           { name: 'New Lead', action: 'new-lead' }
+        ]
+      },
+      'Workspace': {
+        sidebar: [
+          {
+            group: 'GENERAL',
+            items: [
+              { name: 'Dashboard', component: 'workspace-dashboard', icon: 'circle-gauge' }, //Contains stats of agent's previous calls (call sentiment, calls taken, completion score), shift schedule, QA scores
+              { name: 'Inbox', component: 'workspace-inbox', icon: 'message-square' }, //Contains emails, Social messages, SMS and incoming calls
+              { name: 'Communication', component: 'workspace-communication', icon: 'message-square' }, //Contains emails, Social messages, SMS, Softphone utilities
+              { name: 'Phone', component: 'workspace-phone', icon: 'phone' }
+            ]
+          }
+        ],
+        viewActions: []
+      },
+      'CRM': {
+        sidebar: [
+          {
+            group: 'GENERAL',
+            items: [
+              { name: 'Dashboard', component: 'crm-dashboard', icon: 'circle-gauge' }, //stats like total users, total active users
+              { name: 'Leads', component: 'crm-leads', icon: 'users'}
+            ]
+          }
+        ],
+        viewActions: []
+      },
+      'Analytics': {
+      },
+      'Labs': {
+      },
+      'Integrations': {
+        sidebar: [
+          {
+            group: 'GENERAL',
+            items: [
+              { name: 'Telephony', component: 'integrations-telephony', icon: 'phone' }
+            ]
+          }
+        ],
+        viewActions: []
+      },
+      'Settings': {
+      },
+      'Profile': {
+      },
+    };
+
+    // --- FUNCTIONS ---
+
+    /**
+     * Updates the view actions based on the selected activity bar item.
+     * @param {string} title - The title of the selected activity bar item.
+     */
+    function updateViewActions(title) {
+      const data = menuData[title];
+      if (!data || !data.viewActions) {
+        viewActions.innerHTML = '<span>File</span><span>Edit</span><span>View</span>'; // Default content
+        return;
+      }
+
+      let html = '';
+      data.viewActions.forEach(action => {
+        html += `<span data-action="${action.action}">${action.name}</span>`;
+      });
+      viewActions.innerHTML = html;
+    }
+    
+    /**
+     * Handles clicks on the view actions.
+     * @param {Event} event - The click event.
+     */
+    function onViewActionsClick(event) {
+        const action = event.target.dataset.action;
+        if (!action) return;
+
+        console.log(`Action clicked: ${action}`);
+        // Implement action logic here
+    }
+
+    /**
+     * Handles clicks on the accordion headers to toggle them.
+     * @param {Event} event - The click event.
+     */
+    function onAccordionToggle(event) {
+        const header = event.target.closest('.accordion-header');
+        if (!header) return;
+
+        const group = header.parentElement;
+        const wasOpen = group.classList.contains('open');
+
+        // Close all groups
+        sidebar.querySelectorAll('.accordion-group').forEach(g => g.classList.remove('open'));
+
+        // If the clicked group was not already open, open it.
+        if (!wasOpen) {
+            group.classList.add('open');
+        }
+    }
+    
+    /**
+     * Updates the sidebar content based on the selected activity bar item.
+     * @param {string} title - The title of the selected activity bar item.
+     */
+    function updateSidebar(title) {
+      const data = menuData[title];
+      const viewHeader = sidebar.querySelector('.view-header');
+      const accordionContainer = sidebar.querySelector('.accordion-container');
+
+      viewHeader.textContent = title.toUpperCase();
+
+      if (!data || !data.sidebar) {
+        accordionContainer.innerHTML = ''; // Clear content
+        return;
+      }
+
+      let html = '';
+      data.sidebar.forEach((group, index) => {
+        html += `<div class="accordion-group ${index === 0 ? 'open' : ''}">
+                    <div class="accordion-header">
+                        <i data-lucide="chevron-right" class="chevron-icon"></i>
+                        <span>${group.group}</span>
+                    </div>
+                    <div class="accordion-content">
+                        <ul class="nav-list">`;
+        group.items.forEach(item => {
+          html += `<li class="nav-item" data-component="${item.component}">
+                     <i data-lucide="${item.icon}" width="16" height="16"></i>
+                     <span>${item.name}</span>
+                   </li>`;
+        });
+        html += `</ul></div></div>`;
+      });
+      accordionContainer.innerHTML = html;
+      lucide.createIcons({ context: accordionContainer }); // Re-create icons
+    }
+
+    /**
+     * Handles clicks on sidebar items to load components.
+     * @param {Event} event - The click event.
+     */
+    function onSidebarItemClick(event) {
+        const item = event.target.closest('.nav-item');
+        if (!item) return;
+
+        const componentName = item.dataset.component;
+        const title = item.querySelector('span').textContent;
+
+        if (componentName) {
+            tabManager.openTab({ id: componentName, title: title });
+            tabManager.render();
+            load(componentName, mainViewContent);
+            
+            // Update active state in sidebar
+            sidebar.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            item.classList.add('active');
+        }
+    }
+
+    /**
+     * Handles clicks on the activity bar icons.
+     * @param {Event} event - The click event.
+     */
+    function onActivityBarClick(event) {
+      const icon = event.target.closest('.icon');
+      if (!icon) return;
+
+      const title = icon.dataset.title;
+      if (!title) return;
+
+      // 1. Update activity bar active state
+      activityBar.querySelectorAll('.icon').forEach(i => i.classList.remove('active'));
+      icon.classList.add('active');
+
+      // 2. Update sidebar and clear any existing tabs
+      updateSidebar(title);
+      tabManager.clearTabs();
+      tabManager.render();
+
+      // 3. Open and load the first item in the new sidebar view
+      const firstItem = sidebar.querySelector('.nav-item');
+      if (firstItem) {
+        const componentName = firstItem.dataset.component;
+        const componentTitle = firstItem.querySelector('span').textContent;
+        if (componentName) {
+            tabManager.openTab({ id: componentName, title: componentTitle });
+            tabManager.render();
+            load(componentName, mainViewContent);
+            firstItem.classList.add('active');
+        }
+      } else {
+        // If no items, clear the main view content
+        mainViewContent.innerHTML = '<code>/* Select an item from the sidebar */</code>';
+      }
+
+      // 4. Update view actions
+      updateViewActions(title);
+    }
+    
+    /**
+     * Handles clicks on the tab bar.
+     * @param {Event} event - The click event.
+     */
+    function onTabsClick(event) {
+        const tab = event.target.closest('.tab');
+        if (!tab) return;
+
+        const componentId = tab.dataset.id;
+        if (!componentId) return;
+
+        // Set the tab as active in the manager
+        tabManager.setActiveTab(componentId);
+        
+        // Re-render the tabs to show the new active state
+        tabManager.render();
+        
+        // Load the corresponding component
+        load(componentId, mainViewContent);
+
+        // Update active state in the sidebar
+        sidebar.querySelectorAll('.nav-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.component === componentId);
+        });
+    }
+
+    /**
+     * Closes the modal with a fade-out transition.
+     */
+    function closeModal() {
+      const transitionDuration = 300;
+      delete modalContainer.dataset.state;
+      delete modalContainer.dataset.loadedComponent; // Reset loader state
+      setTimeout(() => {
+        modalContainer.innerHTML = '';
+      }, transitionDuration);
+    }
+
+    async function onTitleBarClick(event) {
+      const actionTarget = event.target.closest('[data-action]');
+      if (!actionTarget) return;
+
+      const action = actionTarget.dataset.action;
+
+      switch (action) {
+        case 'toggle-sidebar':
+          document.body.classList.toggle('sidebar-collapsed');
+          break;
+        case 'toggle-details-pane':
+          document.body.classList.toggle('details-pane-collapsed');
+          break;
+        case 'open-settings':
+          if (modalContainer.dataset.state === 'visible') {
+            closeModal();
+          } else {
+            await load('welcome-settings', modalContainer);
+            modalContainer.dataset.state = 'visible';
+          }
+          break;
+      }
+    }
+    
+    // --- MODAL LOGIC (Existing) ---
+    modalContainer.addEventListener('click', (event) => {
+      if (event.target === modalContainer) {
+        closeModal();
+      }
+    });
+
+    // --- EVENT LISTENERS ---
+    activityBar.addEventListener('click', onActivityBarClick);
+    sidebar.addEventListener('click', (event) => {
+        onSidebarItemClick(event);
+        onAccordionToggle(event);
+    });
+    viewActions.addEventListener('click', onViewActionsClick);
+    titleBar.addEventListener('click', onTitleBarClick);
+    mainViewTabs.addEventListener('click', onTabsClick);
+
+    // --- INITIAL STATE ---
+    // Load the initial view for the default active icon
+    const initialActiveIcon = activityBar.querySelector('.icon.active');
+    if (initialActiveIcon) {
+        onActivityBarClick({ target: initialActiveIcon });
+    }
+
+  </script>
+</body>
+</html>

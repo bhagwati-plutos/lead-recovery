@@ -1,0 +1,1 @@
+// Caches requests for resources

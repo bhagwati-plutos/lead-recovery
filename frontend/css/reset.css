@@ -1,0 +1,146 @@
+/* =========================
+   Modern CSS Reset v2
+   Performance-Optimized
+   ========================= */
+
+/* 1. Single universal pass — box model + margin/padding */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2. Color scheme — prevents dark mode flash, styles native controls */
+:root {
+  color-scheme: light dark;
+}
+
+/* 3. Core HTML defaults */
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;          /* standard unprefixed */
+  tab-size: 4;
+}
+
+/* 4. Body defaults */
+body {
+  min-height: 100dvh;              /* dvh tracks mobile toolbar; vh does not */
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; /* Firefox on macOS */
+}
+
+/* 5. Media defaults — SVG split out; height:auto collapses viewBox-sized icons */
+img, picture, video, canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 6. Form element normalization */
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+/* 7. Semantic list reset */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* 8. Anchor defaults */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 9. Typography */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;              /* iterative solver; browser caps at 6 lines */
+}
+
+h4, h5, h6 {
+  text-wrap: pretty;               /* lighter algorithm, no line cap */
+}
+
+/* 10. Tables */
+table {
+  border-collapse: collapse;       /* border-spacing: 0 is redundant here */
+}
+
+/* 11. Button reset */
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* 12. Fieldset / legend */
+fieldset {
+  border: 0;
+  padding: 0.01px;                 /* workaround: prevents min-content bug in Firefox */
+}
+
+legend {
+  padding: 0;
+}
+
+/* 13. Misc elements */
+hr {
+  border: none;
+  border-top: 1px solid currentColor;
+  opacity: 0.2;
+}
+
+abbr[title] {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+dialog {
+  margin: auto;
+}
+
+/* 14. Layout isolation for framework roots */
+#root, #__next {
+  isolation: isolate;
+}
+
+/* 15. Focus visibility */
+:focus-visible {
+  outline: 2px solid Highlight;
+  outline-offset: 2px;
+}
+
+/* 16. Smooth scroll + keyword animations — only when motion is welcome */
+ @media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+    interpolate-size: allow-keywords;
+  }
+}
+
+/* 17. Reduce motion — covers scroll, animation, and transition */
+ @media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

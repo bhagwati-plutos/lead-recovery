@@ -1,0 +1,120 @@
+<link rel="stylesheet" href="components/integrations-telephony/integrations-telephony.css">
+
+<div class="header">
+    <h1>Telephony Integrations</h1>
+    <p>Connect your telephony providers to enable voice capabilities.</p>
+</div>
+
+<div class="integration-grid">
+    <!-- Twilio Card -->
+    <div class="integration-card" data-service="twilio">
+        <div class="card-header">
+            <h3>Twilio</h3>
+            <span class="status" data-status="twilio">Not Configured</span>
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="twilio-account-sid">Account SID</label>
+                <input type="text" id="twilio-account-sid" data-credential="accountSid" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+            </div>
+            <div class="form-group">
+                <label for="twilio-auth-token">Auth Token</label>
+                <input type="password" id="twilio-auth-token" data-credential="authToken" placeholder="••••••••••••••••••••••••••••••••">
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+
+    <!-- Genesys Cloud Card -->
+    <div class="integration-card" data-service="genesys">
+        <div class="card-header">
+            <h3>Genesys Cloud</h3>
+            <span class="status" data-status="genesys">Not Configured</span>
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="genesys-client-id">Client ID</label>
+                <input type="text" id="genesys-client-id" data-credential="clientId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+            </div>
+            <div class="form-group">
+                <label for="genesys-client-secret">Client Secret</label>
+                <input type="password" id="genesys-client-secret" data-credential="clientSecret" placeholder="••••••••••••••••••••••••••••••••">
+            </div>
+            <div class="form-group">
+                <label for="genesys-region">Region</label>
+                <select id="genesys-region" data-credential="region">
+                    <option value="api.mypurecloud.com">US East (N. Virginia)</option>
+                    <option value="api.usw2.pure.cloud">US West (Oregon)</option>
+                    <option value="api.ca-central-1.prod.pure.cloud">Canada (Central)</option>
+                    <option value="api.eu-central-1.prod.pure.cloud">Europe (Frankfurt)</option>
+                    <option value="api.eu-west-1.prod.pure.cloud">Europe (Ireland)</option>
+                    <option value="api.eu-west-2.prod.pure.cloud">Europe (London)</option>
+                    <option value="api.ap-southeast-2.prod.pure.cloud">Asia Pacific (Sydney)</option>
+                    <option value="api.ap-northeast-1.prod.pure.cloud">Asia Pacific (Tokyo)</option>
+                    <option value="api.ap-northeast-2.prod.pure.cloud">Asia Pacific (Seoul)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+
+    <!-- Amazon Connect Card -->
+    <div class="integration-card" data-service="connect">
+        <div class="card-header">
+            <h3>Amazon Connect</h3>
+            <span class="status" data-status="connect">Not Configured</span>
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="connect-instance-id">Instance ID</label>
+                <input type="text" id="connect-instance-id" data-credential="instanceId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+            </div>
+            <div class="form-group">
+                <label for="connect-access-key">AWS Access Key ID</label>
+                <input type="text" id="connect-access-key" data-credential="accessKeyId" placeholder="AKIAxxxxxxxxxxxxxxxx">
+            </div>
+            <div class="form-group">
+                <label for="connect-secret-key">AWS Secret Access Key</label>
+                <input type="password" id="connect-secret-key" data-credential="secretAccessKey" placeholder="••••••••••••••••••••••••••••••••••••••••">
+            </div>
+            <div class="form-group">
+                <label for="connect-region">AWS Region</label>
+                <select id="connect-region" data-credential="region">
+                    <option value="us-east-1">US East (N. Virginia)</option>
+                    <option value="us-west-2">US West (Oregon)</option>
+                    <option value="ca-central-1">Canada (Central)</option>
+                    <option value="eu-central-1">Europe (Frankfurt)</option>
+                    <option value="eu-west-1">Europe (Ireland)</option>
+                    <option value="eu-west-2">Europe (London)</option>
+                    <option value="ap-southeast-2">Asia Pacific (Sydney)</option>
+                    <option value="ap-northeast-1">Asia Pacific (Tokyo)</option>
+                    <option value="ap-northeast-2">Asia Pacific (Seoul)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+
+    <!-- Exotel Card -->
+    <div class="integration-card" data-service="exotel">
+        <div class="card-header">
+            <h3>Exotel</h3>
+            <span class="status" data-status="exotel">Not Configured</span>
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="exotel-account-sid">Account SID / Subdomain</label>
+                <input type="text" id="exotel-account-sid" data-credential="accountSid" placeholder="Your account SID or subdomain">
+            </div>
+            <div class="form-group">
+                <label for="exotel-api-key">API Key</label>
+                <input type="text" id="exotel-api-key" data-credential="apiKey" placeholder="Your API Key">
+            </div>
+            <div class="form-group">
+                <label for="exotel-api-token">API Token</label>
+                <input type="password" id="exotel-api-token" data-credential="apiToken" placeholder="••••••••••••••••••••••••••••••••">
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,2 @@
+// A frontend Storage Manager which exposes promise based API to store data on frontend
+// Multiple adapters which are used by Storage Manager to actuall store data (Adapters for IndexDB, Local storage, Session storage, Remote storage using rest)

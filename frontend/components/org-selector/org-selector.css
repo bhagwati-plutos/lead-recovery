@@ -1,0 +1,168 @@
+:host {
+  /* This component will inherit variables from the main stylesheet */
+}
+
+/* =========================
+   PILL CONTAINER
+   ========================= */
+.resource-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  height: 28px;
+  background: var(--bg-sidebar);
+  font-size: 13px;
+  color: var(--text-main);
+  /* font-family is inherited */
+}
+
+/* =========================
+   ADD BUTTON
+   ========================= */
+.pill-action {
+  width: 28px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-right: 1px solid var(--border-color);
+}
+.pill-action:hover {
+  background: var(--bg-hover);
+  color: var(--text-main);
+}
+
+/* =========================
+   SELECTOR
+   ========================= */
+.resource-selector {
+  position: relative;
+}
+
+/* Trigger */
+.selector-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.selector-trigger:hover {
+  background: var(--bg-hover);
+}
+
+.selector-trigger:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* =========================
+   DROPDOWN
+   ========================= */
+.selector-dropdown {
+  position: absolute;
+  top: calc(100% + 4px); /* More robust positioning */
+  left: 0;
+  width: 260px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
+.resource-pill[data-state="open"] .selector-dropdown {
+  display: flex;
+}
+
+/* =========================
+   SEARCH INPUT
+   ========================= */
+.selector-search {
+  background: var(--bg-input);
+  border: none;
+  outline: none;
+  color: var(--text-main);
+  padding: 6px 8px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.selector-search:focus {
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* =========================
+   LIST
+   ========================= */
+.selector-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* Option */
+.selector-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 3px;
+  margin: 0 4px;
+}
+
+.selector-option:hover {
+  background: var(--bg-hover);
+}
+
+.selector-option.active {
+  background: var(--accent);
+  color: white;
+}
+
+/* Edit button */
+.edit-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.selector-option.active .edit-btn,
+.selector-option:hover .edit-btn {
+  color: var(--text-main);
+}
+
+/* Scrollbar */
+.selector-list::-webkit-scrollbar {
+  width: 8px;
+}
+.selector-list::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+/* Empty state */
+.empty-state {
+  padding: 6px 8px;
+  color: var(--text-muted);
+  display: none;
+}

@@ -1,0 +1,470 @@
+/* ========================================= */
+/* 1. CSS VARIABLES (THEMING & SPACING)      */
+/* ========================================= */
+:root {
+  /* Typography */
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: Consolas, "Courier New", monospace;
+  --font-size: 13px;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+
+  /* Sizing Constraints */
+  --title-height: 35px;
+  --activity-width: 48px;
+  --sidebar-width: 250px;
+  --details-pane-width: 250px;
+  --call-logs-height: 250px;
+  --status-height: 22px;
+  
+  --menu-inversion-radius: 10px;
+}
+
+/* 🌙 Dark Theme (Applied by adding class 'theme-dark' to body/html) */
+.theme-dark {
+  --bg-title: #323233;
+  --bg-activity: #333333;
+  --bg-sidebar: #252526;
+  --bg-main-view: #1e1e1e;
+  --bg-call-logs: #1e1e1e;
+  --bg-status: #007acc;
+  --bg-tab-active: #1e1e1e;
+  --bg-tab-inactive: #2d2d2d;
+  --bg-hover: rgba(255, 255, 255, 0.1);
+
+  --text-main: #cccccc;
+  --text-muted: #858585;
+  --text-status: #ffffff;
+  --border-color: #3c3c3c;
+  --accent: #007acc;
+
+  --shadow-bottom: 0 3px 3px -2px rgba(0, 0, 0, 0.4);
+  --shadow-top: 0 -3px 3px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* ☀️ Light Theme (Applied by adding class 'theme-light' to body/html) */
+.theme-light {
+  --bg-title: #dddddd;
+  --bg-activity: #dddddd;
+  --bg-sidebar: #f3f3f3;
+  --bg-main-view: #ffffff;
+  --bg-call-logs: #ffffff;
+  --bg-status: #007acc;
+  --bg-tab-active: #ffffff;
+  --bg-tab-inactive: #ececec;
+  --bg-hover: rgba(0, 0, 0, 0.05);
+
+  --text-main: #333333;
+  --text-muted: #616161;
+  --text-status: #ffffff;
+  --border-color: #e4e4e4;
+  --accent: #007acc;
+
+  --shadow-bottom: 0 3px 3px -2px rgba(0, 0, 0, 0.15);
+  --shadow-top: 0 -3px 3px -2px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================= */
+/* 2. GRID ARCHITECTURE & VARIANTS           */
+/* ========================================= */
+body {
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+  font-family: var(--font-ui);
+  font-size: var(--font-size);
+  color: var(--text-main);
+  background-color: var(--bg-main-view);
+  transition: grid-template-columns 0.3s ease-in-out;
+}
+
+/* Sidebar and Details Pane Collapse Styling */
+body.sidebar-collapsed {
+  --sidebar-width: 0px;
+}
+body.details-pane-collapsed {
+  --details-pane-width: 0px;
+}
+
+.sidebar-collapsed .sidebar,
+.details-pane-collapsed .details-pane {
+  overflow: hidden;
+}
+
+.sidebar-collapsed .sidebar {
+  border-right: none;
+}
+.details-pane-collapsed .details-pane {
+  border-left: none;
+}
+
+/* 
+ * VARIANT 1.1
+ * call-logs is right below the main-view pane, existing solely within its visual footprint. 
+ * The details-pane maintains full height.
+ */
+.variant-1-1 {
+  grid-template-columns: var(--activity-width) var(--sidebar-width) 1fr var(--details-pane-width);
+  grid-template-rows: var(--title-height) 1fr var(--call-logs-height) var(--status-height);
+  grid-template-areas:
+    "title    title    title    title"
+    "activity sidebar  main-view   right"
+    "activity sidebar  call-logs  right"
+    "status   status   status   status";
+}
+
+/* 
+ * VARIANT 1.2
+ * call-logs takes up the width of the second (main-view) and third (details-pane) panes. 
+ * Notice "call-logs" spans the last two columns on the third row.
+ */
+.variant-1-2 {
+  grid-template-columns: var(--activity-width) var(--sidebar-width) 1fr var(--details-pane-width);
+  grid-template-rows: var(--title-height) 1fr var(--call-logs-height) var(--status-height);
+  grid-template-areas:
+    "title    title    title    title"
+    "activity sidebar  main-view   right"
+    "activity call-logs  call-logs  right"
+    "status   status   status   status";
+}
+
+/* ========================================= */
+/* 3. COMPONENT STYLING                      */
+/* ========================================= */
+
+.title-bar {
+  grid-area: title;
+  background-color: var(--bg-title);
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* This is the key change */
+  padding: 0 var(--spacing-sm);
+  user-select: none;
+}
+.title-bar .view-context-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.title-bar .view-context-menu span {
+  cursor: pointer;
+}
+.title-bar .title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+}
+
+.title-bar-icon {
+  cursor: pointer;
+}
+
+.list_pill {
+  display: flex;
+  align-items: center;
+  z-index: 999;
+  position: relative;
+}
+
+.list_pill [data-lucide] {
+  display: flex;
+}
+
+.list_pill-selector {
+  display: flex;
+  align-items: center;
+}
+
+.list_pill-selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list_pill-data {
+  position: absolute;
+  top: 30px;
+  list-style: none;
+  width: 100%;
+}
+
+.list_pill-data li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
+  cursor: pointer;
+}
+
+.activity-bar {
+  grid-area: activity;
+  background-color: var(--bg-activity);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.activity-bar-top, .activity-bar-bottom {
+  width: 100%;
+}
+
+.activity-bar .icon {
+  font-size: 20px;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  position: relative;
+}
+
+.activity-bar .icon.active {
+  --active-indicator-bg: var(--bg-sidebar);
+  background-color: var(--active-indicator-bg);
+}
+
+.sidebar-collapsed .activity-bar .icon.active {
+  --active-indicator-bg: var(--bg-main-view);
+}
+
+.activity-bar .icon.active::before,
+.activity-bar .icon.active::after {
+    content: '';
+    position: absolute;
+    width: var(--menu-inversion-radius);
+    height: var(--menu-inversion-radius);
+    background: transparent;
+    right: 0;
+}
+
+.activity-bar .icon.active::before {
+    top: calc(-1 * var(--menu-inversion-radius));
+    border-bottom-right-radius: var(--menu-inversion-radius);
+    box-shadow: 4px 4px 0 0 var(--active-indicator-bg);
+}
+
+.activity-bar .icon.active::after {
+    bottom: calc(-1 * var(--menu-inversion-radius));
+    border-top-right-radius: var(--menu-inversion-radius);
+    box-shadow: 4px -4px 0 0 var(--active-indicator-bg);
+}
+
+.activity-bar-top .icon:first-child.active::before {
+    content: none;
+}
+
+.activity-bar-bottom .icon:last-child.active::after {
+    content: none;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.details-pane {
+  grid-area: right;
+  background-color: var(--bg-sidebar);
+  border-left: 1px solid var(--border-color);
+  overflow: auto;
+}
+
+.view-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.accordion-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.accordion-group {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.accordion-header {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.accordion-header:hover {
+    background-color: var(--bg-hover);
+}
+
+.accordion-header .chevron-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.15s ease-in-out;
+}
+
+.accordion-group:not(.open) .accordion-header .chevron-icon {
+    transform: rotate(0deg);
+}
+
+.accordion-group.open .accordion-header .chevron-icon {
+    transform: rotate(90deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+.accordion-group.open {
+    flex-grow: 1;
+}
+
+.accordion-group.open .accordion-content {
+    max-height: 100vh; /* A large value to allow content to expand */
+    overflow-y: auto;
+}
+
+.nav-list {
+  list-style: none;
+  padding: var(--spacing-xs) 0 var(--spacing-xs) var(--spacing-sm);
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.nav-item.active {
+    background-color: var(--accent);
+    color: var(--text-status);
+}
+
+.main-view {
+  grid-area: main-view;
+  background-color: var(--bg-main-view);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  z-index: 1;
+}
+
+.call-logs {
+  grid-area: call-logs;
+  background-color: var(--bg-call-logs);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.status-bar {
+  grid-area: status;
+  background-color: var(--bg-status);
+  color: var(--text-status);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--spacing-sm);
+  font-size: 12px;
+}
+
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Reusable Tabs Component */
+.tabs {
+  display: none;
+  background-color: var(--bg-tab-inactive);
+  height: 35px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 0 var(--spacing-md);
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-tab-inactive);
+  color: var(--text-muted);
+  cursor: pointer;
+  border-right: 1px solid var(--border-color);
+  border-top: 1px solid transparent;
+}
+.tab.active {
+  background-color: var(--bg-tab-active);
+  color: var(--accent);
+  border-top: 1px solid var(--accent);
+}
+
+.content {
+  padding: var(--spacing-md);
+  font-family: var(--font-mono);
+  flex: 1;
+  overflow: auto;
+}
+
+.component-fade-out {
+  opacity: 0 !important;
+  transition: opacity 0.3s ease-out;
+}
+
+.component-fade-in {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.component-fade-in.component-visible {
+  opacity: 1;
+}
+
+#modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* When the modal is visible */
+#modal-container[data-state="visible"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The direct child (the component) should allow pointer events */
+#modal-container > * {
+  pointer-events: auto;
+}

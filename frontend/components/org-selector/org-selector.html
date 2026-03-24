@@ -1,0 +1,38 @@
+<div class="resource-pill" data-state="closed">
+
+  <!-- Add -->
+  <button class="pill-action" title="Add">
+    <i data-lucide="plus" width="20" height="20"></i>
+  </button>
+
+  <!-- Selector -->
+  <div class="resource-selector">
+
+    <button class="selector-trigger" aria-expanded="false">
+      <i data-lucide="building" width="16" height="16"></i>
+      <span class="selector-selected">Select Organization</span>
+      <i data-lucide="chevron-down" width="20" height="20"></i>
+    </button>
+
+    <div class="selector-dropdown">
+
+      <input
+        type="text"
+        class="selector-search"
+        placeholder="Search or select..."
+      />
+
+      <ul class="selector-list">
+        <li class="selector-option"><span>Acme Corp</span><button class="edit-btn"><i data-lucide="edit-2" width="16" height="16"></i></button></li>
+        <li class="selector-option"><span>Beta Systems</span><button class="edit-btn"><i data-lucide="edit-2" width="16" height="16"></i></button></li>
+        <li class="selector-option"><span>Gamma Labs</span><button class="edit-btn"><i data-lucide="edit-2" width="16" height="16"></i></button></li>
+        <li class="selector-option"><span>Delta Works</span><button class="edit-btn"><i data-lucide="edit-2" width="16" height="16"></i></button></li>
+        <li class="selector-option"><span>Omega Inc</span><button class="edit-btn"><i data-lucide="edit-2" width="16" height="16"></i></button></li>
+      </ul>
+
+      <div class="empty-state">No results found</div>
+
+    </div>
+  </div>
+
+</div>
