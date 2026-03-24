@@ -331,7 +331,7 @@
      * Handles clicks on the activity bar icons.
      * @param {Event} event - The click event.
      */
-    function onActivityBarClick(event) {
+    function onActivityBarClick(event, isInitialLoad = false) {
       const icon = event.target.closest('.icon');
       if (!icon) return;
 
@@ -340,14 +340,16 @@
 
       const isAlreadyActive = icon.classList.contains('active');
 
-      // If the icon is already active, just toggle the sidebar and do nothing else.
-      if (isAlreadyActive) {
+      // If the icon is already active and it's not the initial load, toggle sidebar.
+      if (isAlreadyActive && !isInitialLoad) {
           document.body.classList.toggle('sidebar-collapsed');
           return;
       }
 
       // If we're clicking a new icon, make sure the sidebar is open.
-      document.body.classList.remove('sidebar-collapsed');
+      if (!isInitialLoad) {
+        document.body.classList.remove('sidebar-collapsed');
+      }
 
       // 1. Update activity bar active state
       activityBar.querySelectorAll('.icon').forEach(i => i.classList.remove('active'));
@@ -461,7 +463,7 @@
     // Load the initial view for the default active icon
     const initialActiveIcon = activityBar.querySelector('.icon.active');
     if (initialActiveIcon) {
-        onActivityBarClick({ target: initialActiveIcon });
+        onActivityBarClick({ target: initialActiveIcon }, true);
     }
 
   </script>
