@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Lead Recovery" />
+  <link rel="manifest" href="/site.webmanifest" />
 </head>
 <!-- Toggle Themes: theme-dark | theme-light -->
 <!-- Toggle Layouts: variant-1-1 | variant-1-2 -->
@@ -331,6 +337,17 @@
 
       const title = icon.dataset.title;
       if (!title) return;
+
+      const isAlreadyActive = icon.classList.contains('active');
+
+      // If the icon is already active, just toggle the sidebar and do nothing else.
+      if (isAlreadyActive) {
+          document.body.classList.toggle('sidebar-collapsed');
+          return;
+      }
+
+      // If we're clicking a new icon, make sure the sidebar is open.
+      document.body.classList.remove('sidebar-collapsed');
 
       // 1. Update activity bar active state
       activityBar.querySelectorAll('.icon').forEach(i => i.classList.remove('active'));
